@@ -189,6 +189,114 @@
                 right: 1.5rem; /* Keep toggle button in same position on mobile */
             }
         }
+
+        /* Enhanced search container styles */
+        .search-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+                       0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(229, 231, 235, 1);
+            transition: all 0.3s ease;
+        }
+
+        .search-container:focus-within {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                       0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-2px);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 3.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .search-input:focus {
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-size: 1.25rem;
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
+
+        .search-input:focus + .search-icon {
+            color: #3b82f6;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: none;
+            background: #f3f4f6;
+        }
+
+        .search-clear:hover {
+            background: #e5e7eb;
+            color: #4b5563;
+        }
+
+        .search-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+        }
+
+        .search-tag {
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+            font-weight: 500;
+        }
+
+        .search-tag:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        /* Animation for showing/hiding elements */
+        .hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease forwards;
+        }
     </style>
 </head>
 <body>
@@ -256,38 +364,6 @@
         </div>
     </section>
 
-    <!-- Search Section -->
-    <section class="py-20 bg-gradient-to-b from-white to-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="mb-16">
-                <div class="search-wrapper">
-                    <div class="search-container">
-                        <div class="search-header text-center mb-6">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Find Auto Parts</h3>
-                            <p class="text-gray-600">Search for the parts you need</p>
-                        </div>
-                        <div class="search-input-group">
-                            <input type="text" 
-                                   class="search-input"
-                                   id="partsSearchInput"
-                                   placeholder="Search for auto parts or packages..."
-                                   autocomplete="off">
-                            <i class="fas fa-search search-icon"></i>
-                            <i class="fas fa-times search-clear" id="searchClear"></i>
-                        </div>
-                        <div class="search-tags">
-                            <span class="search-tag" data-search="brake">Brake Parts</span>
-                            <span class="search-tag" data-search="engine">Engine Parts</span>
-                            <span class="search-tag" data-search="battery">Batteries</span>
-                            <span class="search-tag" data-search="maintenance">Maintenance</span>
-                        </div>
-                        <div class="search-suggestions" id="searchSuggestions"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Features Section -->
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
@@ -318,12 +394,46 @@
     </section>
 
     <!-- Products Section -->
-    <section id="products" class="py-16">
+    <section id="products" class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <span class="text-blue-600 font-semibold">OUR PRODUCTS</span>
-                <h2 class="text-3xl md:text-4xl font-bold mt-2">Explore Our Auto Parts</h2>
-                <p class="mt-4 text-gray-600">Find the perfect parts for your vehicle</p>
+            <!-- Search Section -->
+            <div class="mb-16">
+                <div class="search-wrapper">
+                    <div class="search-container bg-white">
+                        <div class="search-header text-center mb-6">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Find Auto Parts</h3>
+                            <p class="text-gray-600">Search for the parts you need</p>
+                        </div>
+                        <div class="search-input-group">
+                            <input type="text" 
+                                   class="search-input"
+                                   id="partsSearchInput"
+                                   placeholder="Search for auto parts or packages..."
+                                   autocomplete="off">
+                            <i class="fas fa-search search-icon"></i>
+                            <i class="fas fa-times search-clear" id="searchClear"></i>
+                        </div>
+                        <div class="search-tags">
+                            <span class="search-tag" data-search="brake">Brake Parts</span>
+                            <span class="search-tag" data-search="engine">Engine Parts</span>
+                            <span class="search-tag" data-search="battery">Batteries</span>
+                            <span class="search-tag" data-search="maintenance">Maintenance</span>
+                        </div>
+                        <!-- No Results Message -->
+                        <div id="noResultsMsg" class="hidden mt-8 text-center py-8 px-4 rounded-lg bg-gray-50">
+                            <i class="fas fa-search text-gray-400 text-4xl mb-4"></i>
+                            <h4 class="text-xl font-semibold text-gray-700 mb-2">No Parts Found</h4>
+                            <p class="text-gray-600">Try adjusting your search or browse our categories</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-16" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold tracking-wider uppercase">Our Products</span>
+                <h2 class="text-4xl md:text-5xl font-bold mt-3 text-gray-800">Quality Auto Parts</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto mt-4 rounded-full"></div>
+                <p class="mt-6 text-gray-600 text-lg max-w-3xl mx-auto">Discover our wide selection of high-quality auto parts for all makes and models</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -806,14 +916,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('partsSearchInput');
             const searchClear = document.getElementById('searchClear');
-            const searchSuggestions = document.getElementById('searchSuggestions');
             const searchTags = document.querySelectorAll('.search-tag');
+            const noResultsMsg = document.getElementById('noResultsMsg');
 
             // Show/hide clear button based on input
             searchInput.addEventListener('input', function() {
                 searchClear.style.display = this.value ? 'block' : 'none';
                 if (this.value) {
                     filterProducts(this.value.toLowerCase());
+                } else {
+                    showAllProducts();
                 }
             });
 
@@ -821,7 +933,6 @@
             searchClear.addEventListener('click', function() {
                 searchInput.value = '';
                 searchClear.style.display = 'none';
-                searchSuggestions.classList.remove('active');
                 showAllProducts();
             });
 
@@ -837,6 +948,8 @@
 
             function filterProducts(searchTerm) {
                 const products = document.querySelectorAll('.parts-gallery-item');
+                let hasResults = false;
+
                 products.forEach(product => {
                     const title = product.querySelector('h3').textContent.toLowerCase();
                     const description = product.querySelector('p').textContent.toLowerCase();
@@ -846,10 +959,20 @@
                         product.style.display = 'block';
                         product.classList.add('highlight');
                         setTimeout(() => product.classList.remove('highlight'), 1000);
+                        hasResults = true;
                     } else {
                         product.style.display = 'none';
                     }
                 });
+
+                // Show/hide no results message with animation
+                if (!hasResults) {
+                    noResultsMsg.classList.remove('hidden');
+                    noResultsMsg.classList.add('fade-in');
+                } else {
+                    noResultsMsg.classList.add('hidden');
+                    noResultsMsg.classList.remove('fade-in');
+                }
             }
 
             function showAllProducts() {
@@ -857,6 +980,8 @@
                 products.forEach(product => {
                     product.style.display = 'block';
                 });
+                noResultsMsg.classList.add('hidden');
+                noResultsMsg.classList.remove('fade-in');
             }
         });
     </script>
