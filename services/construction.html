@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Construction & Maintenance Services | Penguin Sales & Services Company</title>
+    
+    <!-- CSS links -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+    <style>
+        .service-hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
+                        url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat fixed;
+            height: 70vh;
+            min-height: 500px;
+        }
+        
+        .service-card {
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-card {
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            color: #2563eb;
+            margin-bottom: 1rem;
+        }
+
+        /* Updated Sidebar Styling */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -280px;
+            background: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-menu {
+            padding: 4rem 1.5rem 1.5rem;
+        }
+
+        .menu-title {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            color: #1f2937;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-link i {
+            width: 24px;
+            font-size: 1.25rem;
+            margin-right: 1rem;
+            color: #6b7280;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .sidebar-link span {
+            font-weight: 500;
+            font-size: 0.9375rem;
+        }
+
+        .sidebar-link:hover {
+            background: #f3f4f6;
+            color: #1e40af;
+        }
+
+        .sidebar-link:hover i {
+            color: #1e40af;
+        }
+
+        .sidebar-link.active {
+            background: #1e40af;
+            color: white;
+        }
+
+        .sidebar-link.active i {
+            color: white;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: auto;
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 45px;
+            height: 45px;
+            background: white;
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: #f3f4f6;
+        }
+
+        .sidebar-toggle i {
+            font-size: 1.25rem;
+            color: #1e40af;
+        }
+
+        .sidebar.active + .sidebar-toggle {
+            right: 290px;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                max-width: 280px;
+            }
+            .sidebar.active + .sidebar-toggle {
+                right: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Toggle -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Perfect Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-menu">
+            <h3 class="menu-title">Our Services</h3>
+            <nav>
+                <a href="bridal-cars.html" class="sidebar-link">
+                    <i class="fas fa-car-side"></i>
+                    <span>Bridal Cars</span>
+                </a>
+                <a href="towing.html" class="sidebar-link">
+                    <i class="fas fa-truck-pickup"></i>
+                    <span>24/7 Towing</span>
+                </a>
+                <a href="trucking.html" class="sidebar-link">
+                    <i class="fas fa-truck"></i>
+                    <span>Trucking</span>
+                </a>
+                <a href="heavy-equipment.html" class="sidebar-link">
+                    <i class="fas fa-truck-monster"></i>
+                    <span>Heavy Equipment</span>
+                </a>
+                <a href="construction.html" class="sidebar-link active">
+                    <i class="fas fa-hard-hat"></i>
+                    <span>Construction</span>
+                </a>
+                <a href="furniture.html" class="sidebar-link">
+                    <i class="fas fa-couch"></i>
+                    <span>Furniture</span>
+                </a>
+                <a href="auto-parts.html" class="sidebar-link">
+                    <i class="fas fa-cogs"></i>
+                    <span>Auto Parts</span>
+                </a>
+            </nav>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="../index.html" class="sidebar-link">
+                <i class="fas fa-home"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="service-hero flex items-center">
+        <div class="container mx-auto px-4 text-center text-white">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6" data-aos="fade-down">General Construction & Maintenance Services</h1>
+            <p class="text-xl md:text-2xl mb-8" data-aos="fade-up">Professional construction and maintenance solutions for all your needs</p>
+            <div class="space-x-4" data-aos="fade-up" data-aos-delay="200">
+                <a href="#consultation" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300">Book Now</a>
+                <a href="#services" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 text-white font-bold py-3 px-8 rounded-full transition duration-300">Our Services</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">WHY CHOOSE US</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Your Trusted Construction Partner</h2>
+                <p class="mt-4 text-gray-600">Excellence in every project we undertake</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-6" data-aos="fade-up">
+                    <i class="fas fa-medal feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Quality Assurance</h3>
+                    <p class="text-gray-600">High standards in every project</p>
+                </div>
+                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-users feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Expert Team</h3>
+                    <p class="text-gray-600">Skilled professionals at your service</p>
+                </div>
+                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-clock feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Timely Delivery</h3>
+                    <p class="text-gray-600">On-time project completion</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">OUR SERVICES</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">General Construction Services</h2>
+                <p class="mt-4 text-gray-600">Complete construction and maintenance solutions for residential and commercial needs</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="service-card bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300" data-aos="fade-up">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1429497419816-9ca5cfb4571a?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Commercial Construction" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                            <span class="text-white text-sm font-semibold">Commercial</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <i class="fas fa-building text-4xl text-blue-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Commercial Construction</h3>
+                        <p class="text-gray-600 mb-4">Full-service commercial construction solutions for businesses of all sizes.</p>
+                        <ul class="space-y-2 mb-4">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Office Buildings</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Retail Spaces</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Industrial Facilities</li>
+                        </ul>
+                        <a href="#consultation" class="text-blue-600 hover:text-blue-800 flex items-center group">
+                            Book Now
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="service-card bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?w=800" alt="Residential Construction" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                            <span class="text-white text-sm font-semibold">Residential</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <i class="fas fa-home text-4xl text-blue-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Residential Construction</h3>
+                        <p class="text-gray-600 mb-4">Custom home building and renovation services for your dream home.</p>
+                        <ul class="space-y-2 mb-4">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Custom Homes</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Home Renovations</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Kitchen & Bath Remodels</li>
+                        </ul>
+                        <a href="#consultation" class="text-blue-600 hover:text-blue-800 flex items-center group">
+                            Book Now
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="service-card bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://plus.unsplash.com/premium_photo-1675810094948-d4634e766d2b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Maintenance Services" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                            <span class="text-white text-sm font-semibold">Maintenance</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <i class="fas fa-tools text-4xl text-blue-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Maintenance Services</h3>
+                        <p class="text-gray-600 mb-4">Comprehensive maintenance solutions to keep your property in top condition.</p>
+                        <ul class="space-y-2 mb-4">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Preventive Maintenance</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Emergency Repairs</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Facility Upgrades</li>
+                        </ul>
+                        <a href="#consultation" class="text-blue-600 hover:text-blue-800 flex items-center group">
+                            Book Now
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Construction Packages -->
+    <section class="py-16 bg-blue-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">CONSTRUCTION PACKAGES</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Professional Construction Solutions</h2>
+                <p class="mt-4 text-gray-600">Choose the right package for your construction needs</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Basic Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up">
+                    <div class="bg-blue-600 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Basic Build</h3>
+                        <p class="text-lg mt-1">Essential Construction</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱500,000</span>
+                            <p class="text-gray-600">Starting price</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Basic architectural design</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Standard materials</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Project management</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Basic finishes</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 1-year warranty</li>
+                        </ul>
+                        <a href="#consultation" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center justify-center">
+                            Book Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Premium Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up" data-aos-delay="100">
+                    <div class="bg-blue-800 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Premium Build</h3>
+                        <p class="text-lg mt-1">Enhanced Construction</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱1,000,000</span>
+                            <p class="text-gray-600">Starting price</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Custom architectural design</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Premium materials</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Dedicated project manager</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Premium finishes</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 3-year warranty</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Interior design consultation</li>
+                        </ul>
+                        <a href="#consultation" class="w-full bg-blue-800 text-white px-6 py-3 rounded-full hover:bg-blue-900 transition duration-300 inline-flex items-center justify-center">
+                            Book Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Luxury Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up" data-aos-delay="200">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Luxury Build</h3>
+                        <p class="text-lg mt-1">Premium Construction</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱2,000,000</span>
+                            <p class="text-gray-600">Starting price</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Bespoke architectural design</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Luxury materials</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> VIP project management</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> High-end finishes</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 5-year warranty</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Full interior design service</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Smart home integration</li>
+                        </ul>
+                        <a href="#consultation" class="w-full bg-gray-800 text-white px-6 py-3 rounded-full hover:bg-gray-900 transition duration-300 inline-flex items-center justify-center">
+                            Book Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12" data-aos="fade-up">
+                <p class="text-gray-600 mb-6">Need a customized construction solution? Contact us for a tailored package.</p>
+                <a href="#consultation" class="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300">
+                    Request Custom Quote
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Portfolio -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">OUR PROJECTS</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Featured Projects</h2>
+                <p class="mt-4 text-gray-600">Discover our exceptional construction portfolio</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="project-card bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up">
+                    <div class="relative h-64">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800" alt="Commercial Complex" class="w-full h-full object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                            <h3 class="text-white text-xl font-bold">Modern Office Complex</h3>
+                            <p class="text-white/90 text-sm">Completed 2024</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-2">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>15-story office building</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>LEED certified design</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Smart building technology</li>
+                        </ul>
+                        <div class="mt-4 flex justify-between items-center">
+                            <span class="text-blue-600">Location: City Center</span>
+                            <button class="text-blue-600 hover:text-blue-800 flex items-center group">
+                                View Details
+                                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative h-64">
+                        <img src="https://media.istockphoto.com/id/1540164261/photo/luxury-house-with-swimming-pool-at-night.jpg?s=1024x1024&w=is&k=20&c=mH0_Na1pJhxhDjOuKpkP05O9iR5mr8F3PgkqVo9LeCQ=" alt="Luxury Residence" class="w-full h-full object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                            <h3 class="text-white text-xl font-bold">Luxury Villa Complex</h3>
+                            <p class="text-white/90 text-sm">Completed 2023</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-2">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>12 luxury villas</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Smart home integration</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Eco-friendly design</li>
+                        </ul>
+                        <div class="mt-4 flex justify-between items-center">
+                            <span class="text-blue-600">Location: Suburban Area</span>
+                            <button class="text-blue-600 hover:text-blue-800 flex items-center group">
+                                View Details
+                                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <div class="relative h-64">
+                        <img src="https://images.pexels.com/photos/16113326/pexels-photo-16113326/free-photo-of-bathroom-interior.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hotel Renovation" class="w-full h-full object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                            <h3 class="text-white text-xl font-bold">Hotel Renovation</h3>
+                            <p class="text-white/90 text-sm">Completed 2024</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-2">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>200+ room renovation</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Modern amenities</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Energy efficiency upgrade</li>
+                        </ul>
+                        <div class="mt-4 flex justify-between items-center">
+                            <span class="text-blue-600">Location: Downtown</span>
+                            <button class="text-blue-600 hover:text-blue-800 flex items-center group">
+                                View Details
+                                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Projects Info -->
+            <div class="mt-12 text-center" data-aos="fade-up">
+                <p class="text-gray-600 mb-6">Looking to start your construction project? Get in touch with our expert team today.</p>
+                <a href="#consultation" class="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300">
+                    Request Consultation
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Consultation Form -->
+    <section id="consultation" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">GET STARTED</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Request a Consultation</h2>
+                <p class="mt-4 text-gray-600">Let's discuss your construction project</p>
+            </div>
+            <div class="max-w-2xl mx-auto">
+                <form class="p-8" data-aos="fade-up">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2" for="name">Full Name</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2" for="email">Email Address</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2" for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2" for="project-type">Project Type</label>
+                            <select id="project-type" name="project-type" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <option value="">Select a project type</option>
+                                <option value="commercial">Commercial Construction</option>
+                                <option value="residential">Residential Construction</option>
+                                <option value="maintenance">Maintenance Services</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <label class="block text-gray-700 font-medium mb-2" for="message">Project Details</label>
+                        <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                    </div>
+                    <div class="mt-6">
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">Submit Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">FAQ</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Frequently Asked Questions</h2>
+                <p class="mt-4 text-gray-600">Find answers to common questions about our construction services</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <div class="space-y-6" data-aos="fade-up">
+                    <!-- FAQ Item 1 -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">How long does a typical construction project take?</h3>
+                        <p class="text-gray-600">Project timelines vary depending on size and complexity. Small residential projects may take 3-6 months, while larger commercial projects can take 12-24 months. We provide detailed timelines during consultation.</p>
+                    </div>
+
+                    <!-- FAQ Item 2 -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Do you handle permits and approvals?</h3>
+                        <p class="text-gray-600">Yes, we manage all necessary permits and approvals as part of our service. Our team handles documentation, submission, and follow-ups with relevant authorities to ensure compliance.</p>
+                    </div>
+
+                    <!-- FAQ Item 3 -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">What payment terms do you offer?</h3>
+                        <p class="text-gray-600">We offer flexible payment terms with a standard structure of 30% initial payment, progress payments based on construction milestones, and final payment upon project completion.</p>
+                    </div>
+
+                    <!-- FAQ Item 4 -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Are your construction services insured?</h3>
+                        <p class="text-gray-600">Yes, we maintain comprehensive insurance coverage including general liability, worker's compensation, and builder's risk insurance to protect both our clients and projects.</p>
+                    </div>
+
+                    <!-- FAQ Item 5 -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Can you work with my own architectural plans?</h3>
+                        <p class="text-gray-600">Yes, we can work with your existing architectural plans or create new ones. Our team collaborates with architects and designers to ensure your vision is executed perfectly.</p>
+                    </div>
+                </div>
+
+              
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Penguin General Construction</h3>
+                    <p class="text-gray-400 mb-4">Your trusted partner in construction and maintenance excellence since 1995.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Our Services</a></li>
+                        <li><a href="#consultation" class="text-gray-400 hover:text-white transition-colors">Book Now</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Projects</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Commercial Construction</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Residential Construction</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Maintenance Services</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Renovation</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-map-marker-alt w-5"></i>
+                            <span>123 Construction Ave, Manila</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-phone w-5"></i>
+                            <span>+63 123 456 7890</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-envelope w-5"></i>
+                            <span>info@penguinconstruction.com</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-clock w-5"></i>
+                            <span>Mon - Fri: 8:00 AM - 5:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 Penguin Construction. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Form handling
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your consultation request. We will contact you shortly!');
+            this.reset();
+        });
+
+        // Perfect Sidebar Functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            
+            // Toggle icon
+            const icon = sidebarToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Close sidebar on mobile when clicking a link
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Close sidebar when pressing Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        });
+    </script>
+</body>
+</html>

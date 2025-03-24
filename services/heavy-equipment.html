@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heavy Equipment Rental | Penguin Sales & Services Company</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <style>
+        .service-hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
+                        url('https://media.istockphoto.com/id/2151678841/photo/close-up-of-excavator-at-construction-site-backhoe-digging-soil-for-earthwork-and.jpg?s=1024x1024&w=is&k=20&c=x4eTDFthRh9encboudtimLa_TghP8lu7Sigkr-ZdcAM=') center/cover no-repeat fixed;
+            height: 70vh;
+            min-height: 500px;
+        }
+        
+        .equipment-card {
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .equipment-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .package-card {
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .package-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.1);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            color: #2563eb;
+            margin-bottom: 1rem;
+        }
+
+        /* Sidebar Styling (Same as before) */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -280px;
+            background: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-menu {
+            padding: 4rem 1.5rem 1.5rem;
+        }
+
+        .menu-title {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            color: #1f2937;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-link i {
+            width: 24px;
+            font-size: 1.25rem;
+            margin-right: 1rem;
+            color: #6b7280;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .sidebar-link span {
+            font-weight: 500;
+            font-size: 0.9375rem;
+        }
+
+        .sidebar-link:hover {
+            background: #f3f4f6;
+            color: #1e40af;
+        }
+
+        .sidebar-link:hover i {
+            color: #1e40af;
+        }
+
+        .sidebar-link.active {
+            background: #1e40af;
+            color: white;
+        }
+
+        .sidebar-link.active i {
+            color: white;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: auto;
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 45px;
+            height: 45px;
+            background: white;
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: #f3f4f6;
+        }
+
+        .sidebar-toggle i {
+            font-size: 1.25rem;
+            color: #1e40af;
+        }
+
+        .sidebar.active + .sidebar-toggle {
+            right: 290px;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                max-width: 280px;
+            }
+            .sidebar.active + .sidebar-toggle {
+                right: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Toggle -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Perfect Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-menu">
+            <h3 class="menu-title">Our Services</h3>
+            <nav>
+                <a href="bridal-cars.html" class="sidebar-link">
+                    <i class="fas fa-car-side"></i>
+                    <span>Bridal Cars</span>
+                </a>
+                <a href="towing.html" class="sidebar-link">
+                    <i class="fas fa-truck-pickup"></i>
+                    <span>24/7 Towing</span>
+                </a>
+                <a href="trucking.html" class="sidebar-link">
+                    <i class="fas fa-truck"></i>
+                    <span>Trucking</span>
+                </a>
+                <a href="heavy-equipment.html" class="sidebar-link active">
+                    <i class="fas fa-truck-monster"></i>
+                    <span>Heavy Equipment</span>
+                </a>
+                <a href="construction.html" class="sidebar-link">
+                    <i class="fas fa-hard-hat"></i>
+                    <span>Construction</span>
+                </a>
+                <a href="furniture.html" class="sidebar-link">
+                    <i class="fas fa-couch"></i>
+                    <span>Furniture</span>
+                </a>
+                <a href="auto-parts.html" class="sidebar-link">
+                    <i class="fas fa-cogs"></i>
+                    <span>Auto Parts</span>
+                </a>
+            </nav>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="../index.html" class="sidebar-link">
+                <i class="fas fa-home"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="service-hero flex items-center">
+        <div class="container mx-auto px-4 text-center text-white">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6" data-aos="fade-down">Heavy Equipment Rental</h1>
+            <p class="text-xl md:text-2xl mb-8" data-aos="fade-up">Reliable and efficient heavy equipment for your construction needs</p>
+            <div class="space-x-4" data-aos="fade-up" data-aos-delay="200">
+                <a href="#booking" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300">Book Now</a>
+                <a href="#equipment" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 text-white font-bold py-3 px-8 rounded-full transition duration-300">View Equipment</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">WHY CHOOSE US</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Your Trusted Equipment Partner</h2>
+                <p class="mt-4 text-gray-600">We provide top-quality heavy equipment for all your construction projects</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-6" data-aos="fade-up">
+                    <i class="fas fa-hard-hat feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Wide Range of Equipment</h3>
+                    <p class="text-gray-600">From excavators to bulldozers, we have it all</p>
+                </div>
+                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-tools feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Well-Maintained Fleet</h3>
+                    <p class="text-gray-600">Our equipment is regularly serviced and inspected</p>
+                </div>
+                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-clock feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Flexible Rental Plans</h3>
+                    <p class="text-gray-600">Daily, weekly, and monthly rental options</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Equipment Section -->
+    <section id="equipment" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">OUR EQUIPMENT</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Heavy Equipment for Rent</h2>
+                <p class="mt-4 text-gray-600">Choose from our extensive fleet of heavy equipment</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Equipment 1 -->
+                <div class="equipment-card bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up">
+                    <img src="https://plus.unsplash.com/premium_photo-1661963927439-26e74bee3674?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Excavator" class="w-full h-48 object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold mb-2">Excavator</h3>
+                        <p class="text-gray-600 mb-4">Ideal for digging and earthmoving tasks</p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Bucket capacity: 1.5 m³</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Engine power: 150 HP</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Operating weight: 20 tons</li>
+                        </ul>
+                        <div class="mt-auto">
+                            <a href="#booking" class="block text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Equipment 2 -->
+                <div class="equipment-card bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1629807473015-41699c4471b5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Bulldozer" class="w-full h-48 object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold mb-2">Bulldozer</h3>
+                        <p class="text-gray-600 mb-4">Perfect for grading and leveling terrain</p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Blade capacity: 5 m³</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Engine power: 200 HP</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Operating weight: 25 tons</li>
+                        </ul>
+                        <div class="mt-auto">
+                            <a href="#booking" class="block text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Equipment 3 -->
+                <div class="equipment-card bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://plus.unsplash.com/premium_photo-1682144435143-97c426ff3a77?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Crane" class="w-full h-48 object-cover">
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold mb-2">Crane</h3>
+                        <p class="text-gray-600 mb-4">For heavy lifting and construction tasks</p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Lifting capacity: 50 tons</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Boom length: 60 meters</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Engine power: 300 HP</li>
+                        </ul>
+                        <div class="mt-auto">
+                            <a href="#booking" class="block text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section class="py-16 bg-blue-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">RENTAL PACKAGES</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Professional Equipment Solutions</h2>
+                <p class="mt-4 text-gray-600">Choose the right rental duration for your project</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Daily Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up">
+                    <div class="bg-blue-600 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Daily Rental</h3>
+                        <p class="text-lg mt-1">Perfect for short-term projects</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱10,000</span>
+                            <p class="text-gray-600">per day</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 24-hour rental period</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Professional operator included</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Fuel included</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Basic insurance coverage</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Same-day availability</li>
+                        </ul>
+                        <a href="#booking" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center justify-center">
+                            Book Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Weekly Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up" data-aos-delay="100">
+                    <div class="bg-blue-800 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Weekly Rental</h3>
+                        <p class="text-lg mt-1">Ideal for medium-term projects</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱50,000</span>
+                            <p class="text-gray-600">per week</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 7-day rental period</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Professional operator included</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Fuel included</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Enhanced insurance coverage</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Priority scheduling</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 24/7 technical support</li>
+                        </ul>
+                        <a href="#booking" class="w-full bg-blue-800 text-white px-6 py-3 rounded-full hover:bg-blue-900 transition duration-300 inline-flex items-center justify-center">
+                            Book Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Monthly Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up" data-aos-delay="200">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Monthly Rental</h3>
+                        <p class="text-lg mt-1">Best for long-term projects</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱150,000</span>
+                            <p class="text-gray-600">per month</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 30-day rental period</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Professional operator included</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Fuel included</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Comprehensive insurance</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> VIP priority service</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 24/7 technical support</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Flexible scheduling</li>
+                        </ul>
+                        <a href="#booking" class="w-full bg-gray-800 text-white px-6 py-3 rounded-full hover:bg-gray-900 transition duration-300 inline-flex items-center justify-center">
+                            Book Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12" data-aos="fade-up">
+                <p class="text-gray-600 mb-6">Need a customized rental solution? Contact us for a tailored package.</p>
+                <a href="#booking" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 inline-flex items-center">
+                    Request Custom Quote
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">TESTIMONIALS</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">What Our Clients Say</h2>
+                <p class="mt-4 text-gray-600">Hear from our satisfied customers</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" alt="Client" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold">John Doe</h4>
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"The equipment was in excellent condition, and the team was very professional. Highly recommended!"</p>
+                </div>
+
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="Client" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold">Jane Smith</h4>
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Great service and well-maintained equipment. Made our project much easier to manage."</p>
+                </div>
+
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" alt="Client" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold">Mike Johnson</h4>
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"The monthly rental package was perfect for our long-term project. Excellent value for money!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">BOOK NOW</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Rent Heavy Equipment</h2>
+                <p class="mt-4 text-gray-600">Fill out the form below to book your equipment</p>
+            </div>
+            
+            <div class="max-w-2xl mx-auto">
+                <form id="bookingForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Name</label>
+                            <input type="text" required class="w-full px-4 py-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Phone</label>
+                            <input type="tel" required class="w-full px-4 py-2 border rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" required class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Equipment Type</label>
+                            <select class="w-full px-4 py-2 border rounded-lg">
+                                <option>Excavator</option>
+                                <option>Bulldozer</option>
+                                <option>Crane</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Rental Duration</label>
+                            <select class="w-full px-4 py-2 border rounded-lg">
+                                <option>Daily</option>
+                                <option>Weekly</option>
+                                <option>Monthly</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Additional Requirements</label>
+                        <textarea rows="4" class="w-full px-4 py-2 border rounded-lg"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">Submit Booking</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- FAQ Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">FAQ</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Common Questions</h2>
+                <p class="mt-4 text-gray-600">Everything you need to know about our rental services</p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto space-y-6">
+                <div class="bg-white rounded-lg shadow-lg p-6" data-aos="fade-up">
+                    <h3 class="text-xl font-bold mb-3">Do you provide operators?</h3>
+                    <p class="text-gray-600">Yes, we provide trained and certified operators for all our equipment.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6" data-aos="fade-up">
+                    <h3 class="text-xl font-bold mb-3">What is included in the rental fee?</h3>
+                    <p class="text-gray-600">The rental fee includes the equipment, operator, and fuel.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6" data-aos="fade-up">
+                    <h3 class="text-xl font-bold mb-3">Can I rent equipment for a single day?</h3>
+                    <p class="text-gray-600">Yes, we offer daily, weekly, and monthly rental options.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Penguin General Construction</h3>
+                    <p class="text-gray-400 mb-4">Your trusted partner in construction and maintenance excellence since 1995.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Our Services</a></li>
+                        <li><a href="#consultation" class="text-gray-400 hover:text-white transition-colors">Book Now</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Projects</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Commercial Construction</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Residential Construction</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Maintenance Services</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Renovation</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-map-marker-alt w-5"></i>
+                            <span>123 Construction Ave, Manila</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-phone w-5"></i>
+                            <span>+63 123 456 7890</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-envelope w-5"></i>
+                            <span>info@penguinconstruction.com</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-clock w-5"></i>
+                            <span>Mon - Fri: 8:00 AM - 5:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 Penguin Construction. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Form handling
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your booking request. We will contact you shortly!');
+            this.reset();
+        });
+
+        // Perfect Sidebar Functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            
+            // Toggle icon
+            const icon = sidebarToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Close sidebar on mobile when clicking a link
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Close sidebar when pressing Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        });
+    </script>
+</body>
+</html>

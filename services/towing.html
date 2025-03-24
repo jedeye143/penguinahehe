@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Towing Services | Penguin Sales & Services Company</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <style>
+        .service-hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
+                        url('https://plus.unsplash.com/premium_photo-1661964084829-69f889505c00?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') center/cover no-repeat fixed;
+            height: 70vh;
+            min-height: 500px;
+        }
+        
+        .service-card {
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .package-card {
+            transition: all 0.3s ease;
+        }
+
+        .package-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.1);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            color: #2563eb;
+            margin-bottom: 1rem;
+        }
+
+        /* Sidebar Styling (Same as before) */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -280px;
+            background: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-menu {
+            padding: 4rem 1.5rem 1.5rem;
+        }
+
+        .menu-title {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            color: #1f2937;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-link i {
+            width: 24px;
+            font-size: 1.25rem;
+            margin-right: 1rem;
+            color: #6b7280;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .sidebar-link span {
+            font-weight: 500;
+            font-size: 0.9375rem;
+        }
+
+        .sidebar-link:hover {
+            background: #f3f4f6;
+            color: #1e40af;
+        }
+
+        .sidebar-link:hover i {
+            color: #1e40af;
+        }
+
+        .sidebar-link.active {
+            background: #1e40af;
+            color: white;
+        }
+
+        .sidebar-link.active i {
+            color: white;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: auto;
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 45px;
+            height: 45px;
+            background: white;
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: #f3f4f6;
+        }
+
+        .sidebar-toggle i {
+            font-size: 1.25rem;
+            color: #1e40af;
+        }
+
+        .sidebar.active + .sidebar-toggle {
+            right: 290px;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                max-width: 280px;
+            }
+            .sidebar.active + .sidebar-toggle {
+                right: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Toggle -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Perfect Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-menu">
+            <h3 class="menu-title">Our Services</h3>
+            <nav>
+                <a href="bridal-cars.html" class="sidebar-link">
+                    <i class="fas fa-car-side"></i>
+                    <span>Bridal Cars</span>
+                </a>
+                <a href="towing.html" class="sidebar-link active">
+                    <i class="fas fa-truck-pickup"></i>
+                    <span>24/7 Towing</span>
+                </a>
+                <a href="trucking.html" class="sidebar-link">
+                    <i class="fas fa-truck"></i>
+                    <span>Trucking</span>
+                </a>
+                <a href="heavy-equipment.html" class="sidebar-link">
+                    <i class="fas fa-truck-monster"></i>
+                    <span>Heavy Equipment</span>
+                </a>
+                <a href="construction.html" class="sidebar-link">
+                    <i class="fas fa-hard-hat"></i>
+                    <span>Construction</span>
+                </a>
+                <a href="furniture.html" class="sidebar-link">
+                    <i class="fas fa-couch"></i>
+                    <span>Furniture</span>
+                </a>
+                <a href="auto-parts.html" class="sidebar-link">
+                    <i class="fas fa-cogs"></i>
+                    <span>Auto Parts</span>
+                </a>
+            </nav>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="../index.html" class="sidebar-link">
+                <i class="fas fa-home"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="service-hero flex items-center">
+        <div class="container mx-auto px-4 text-center text-white">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6" data-aos="fade-down">24/7 Towing Services</h1>
+            <p class="text-xl md:text-2xl mb-8" data-aos="fade-up">Reliable and fast towing services anytime, anywhere</p>
+            <div class="space-x-4" data-aos="fade-up" data-aos-delay="200">
+                <a href="#booking" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300">Request Tow</a>
+                <a href="#services" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 text-white font-bold py-3 px-8 rounded-full transition duration-300">Our Services</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">WHY CHOOSE US</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Your Trusted Towing Partner</h2>
+                <p class="mt-4 text-gray-600">We’re here to help you when you need it most</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-6" data-aos="fade-up">
+                    <i class="fas fa-clock feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">24/7 Availability</h3>
+                    <p class="text-gray-600">We’re available round the clock for emergencies</p>
+                </div>
+                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-tools feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Professional Team</h3>
+                    <p class="text-gray-600">Experienced and certified towing professionals</p>
+                </div>
+                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Safe & Secure</h3>
+                    <p class="text-gray-600">Your vehicle is in safe hands with us</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">OUR SERVICES</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Towing Solutions</h2>
+                <p class="mt-4 text-gray-600">Comprehensive towing solutions for all your needs</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="service-card bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300" data-aos="fade-up">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.pexels.com/photos/10061763/pexels-photo-10061763.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Accident Recovery" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                            <span class="text-white text-sm font-semibold">24/7 Service</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <i class="fas fa-car-crash text-4xl text-blue-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Accident Recovery</h3>
+                        <p class="text-gray-600 mb-4">Professional and swift accident recovery service with specialized equipment for any situation.</p>
+                        <a href="#booking" class="text-blue-600 hover:text-blue-800 flex items-center group">
+                            Book Now
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="service-card bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.pexels.com/photos/8931963/pexels-photo-8931963.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Vehicle Transport" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                            <span class="text-white text-sm font-semibold">Nationwide Coverage</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <i class="fas fa-truck-pickup text-4xl text-blue-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Vehicle Transport</h3>
+                        <p class="text-gray-600 mb-4">Safe and secure transportation for all types of vehicles, including luxury and classic cars.</p>
+                        <a href="#booking" class="text-blue-600 hover:text-blue-800 flex items-center group">
+                            Book Now
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="service-card bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800" alt="Jump Start Service" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                            <span class="text-white text-sm font-semibold">Quick Response</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <i class="fas fa-battery-full text-4xl text-blue-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Jump Start Service</h3>
+                        <p class="text-gray-600 mb-4">Instant battery jump-start service with professional equipment and expert technicians.</p>
+                        <a href="#booking" class="text-blue-600 hover:text-blue-800 flex items-center group">
+                            Book Now
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="service-card bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300" data-aos="fade-up">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.pexels.com/photos/9518257/pexels-photo-9518257.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Roadside Assistance" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                            <span class="text-white text-sm font-semibold">Emergency Support</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <i class="fas fa-wrench text-4xl text-blue-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Roadside Assistance</h3>
+                        <p class="text-gray-600 mb-4">Complete roadside support including tire change, fuel delivery, and mechanical assistance.</p>
+                        <a href="#booking" class="text-blue-600 hover:text-blue-800 flex items-center group">
+                            Book Now
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="service-card bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1742069029212-60e03b0e938d?q=80&w=2075&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Heavy Duty Towing" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                            <span class="text-white text-sm font-semibold">Heavy Equipment</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <i class="fas fa-truck text-4xl text-blue-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Heavy Duty Towing</h3>
+                        <p class="text-gray-600 mb-4">Specialized towing service for trucks, buses, and heavy machinery with expert handling.</p>
+                        <a href="#booking" class="text-blue-600 hover:text-blue-800 flex items-center group">
+                            Book Now
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Service 6 -->
+                <div class="service-card bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-1 transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1504222490345-c075b6008014?w=800" alt="Lockout Service" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                            <span class="text-white text-sm font-semibold">Available 24/7</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <i class="fas fa-key text-4xl text-blue-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Lockout Service</h3>
+                        <p class="text-gray-600 mb-4">Professional lockout assistance to help you regain access to your vehicle safely and quickly.</p>
+                        <a href="#booking" class="text-blue-600 hover:text-blue-800 flex items-center group">
+                            Book Now
+                            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Fleet Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">OUR FLEET</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Our Towing Vehicles</h2>
+                <p class="mt-4 text-gray-600">Professional fleet equipped for any towing situation</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Vehicle 1 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up">
+                    <div class="relative h-64">
+                        <img src="https://emergencytowing.ca/wp-content/uploads/2023/08/Flat-Tow-Truck-min.png" alt="Flatbed Tow Truck" class="w-full h-full object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                            <h3 class="text-white text-xl font-bold">Flatbed Tow Truck</h3>
+                            <p class="text-white/90 text-sm">2023 Model</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-2">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Capacity: Up to 5,000 kg</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Hydraulic tilting bed</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Winch system included</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Vehicle 2 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative h-64">
+                        <img src="https://th.bing.com/th/id/OIP.nK_Oe98_W398nCvXEYsjPgHaE8?rs=1&pid=ImgDetMain" alt="Heavy Duty Wrecker" class="w-full h-full object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                            <h3 class="text-white text-xl font-bold">Heavy Duty Wrecker</h3>
+                            <p class="text-white/90 text-sm">2022 Model</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-2">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Capacity: Up to 15,000 kg</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Integrated boom system</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Dual winch capability</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Vehicle 3 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <div class="relative h-64">
+                        <img src="https://th.bing.com/th/id/OIP.FTQGVDpdeawG_qldAlCYWQHaE8?rs=1&pid=ImgDetMain" alt="Wheel Lift Tow Truck" class="w-full h-full object-cover">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                            <h3 class="text-white text-xl font-bold">Wheel Lift Tow Truck</h3>
+                            <p class="text-white/90 text-sm">2023 Model</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-2">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Capacity: Up to 3,500 kg</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Wheel lift system</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Dolly system included</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Fleet Info -->
+            <div class="mt-12 text-center" data-aos="fade-up">
+                <p class="text-gray-600 mb-6">All our vehicles are regularly maintained and equipped with GPS tracking for quick response times</p>
+                <a href="#booking" class="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300">
+                    Request Service
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Services Gallery -->
+    <section class="py-16 bg-blue-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">TOWING PACKAGES</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Reliable & Affordable Towing Services</h2>
+                <p class="mt-4 text-gray-600">Choose the right package to suit your towing needs</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Basic Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up">
+                    <div class="bg-blue-600 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Basic Tow</h3>
+                        <p class="text-lg mt-1">For standard towing needs</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱1,500</span>
+                            <p class="text-gray-600">Up to 10 km</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Standard vehicles</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 24/7 availability</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Professional drivers</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Basic roadside assistance</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> GPS tracking</li>
+                        </ul>
+                        <a href="#booking" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center justify-center">
+                            Book Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+    
+                <!-- Premium Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up" data-aos-delay="100">
+                    <div class="bg-blue-800 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Premium Tow</h3>
+                        <p class="text-lg mt-1">For larger vehicles & longer distances</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱3,000</span>
+                            <p class="text-gray-600">Up to 50 km</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> SUVs & trucks</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 24/7 availability</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Priority service</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Extended roadside assistance</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> GPS tracking</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Damage-free guarantee</li>
+                        </ul>
+                        <a href="#booking" class="w-full bg-blue-800 text-white px-6 py-3 rounded-full hover:bg-blue-900 transition duration-300 inline-flex items-center justify-center">
+                            Book Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+    
+                <!-- Heavy-Duty Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up" data-aos-delay="200">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Heavy-Duty Tow</h3>
+                        <p class="text-lg mt-1">For heavy vehicles & long distances</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱5,000</span>
+                            <p class="text-gray-600">Up to 100 km</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Heavy-duty vehicles</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 24/7 availability</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> VIP priority service</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Comprehensive assistance</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> GPS tracking</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Damage-free guarantee</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Specialized equipment</li>
+                        </ul>
+                        <a href="#booking" class="w-full bg-gray-800 text-white px-6 py-3 rounded-full hover:bg-gray-900 transition duration-300 inline-flex items-center justify-center">
+                            Book Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="text-center mt-12" data-aos="fade-up">
+                <p class="text-gray-600 mb-6">Need a customized towing solution? Contact us for a tailored package.</p>
+                <a href="#quote" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 inline-flex items-center">
+                    Request Custom Quote
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">TESTIMONIALS</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">What Our Clients Say</h2>
+                <p class="mt-4 text-gray-600">Hear from our satisfied customers</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" alt="Client" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold">John Doe</h4>
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"The towing service was quick and professional. They arrived within 30 minutes and handled my car with care. Highly recommended!"</p>
+                </div>
+
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="Client" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold">Jane Smith</h4>
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"I had a flat tire late at night, and the towing team arrived quickly. They were friendly and got me back on the road in no time."</p>
+                </div>
+
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" alt="Client" class="w-12 h-12 rounded-full object-cover">
+                        <div class="ml-4">
+                            <h4 class="font-bold">Mike Johnson</h4>
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Great service! They towed my truck safely and efficiently. I’ll definitely call them again if I need help."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">BOOK NOW</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Request a Tow</h2>
+                <p class="mt-4 text-gray-600">Fill out the form below to request towing services</p>
+            </div>
+            
+            <div class="max-w-2xl mx-auto">
+                <form id="bookingForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Name</label>
+                            <input type="text" required class="w-full px-4 py-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Phone</label>
+                            <input type="tel" required class="w-full px-4 py-2 border rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" required class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Vehicle Type</label>
+                            <select class="w-full px-4 py-2 border rounded-lg">
+                                <option>Car</option>
+                                <option>SUV</option>
+                                <option>Truck</option>
+                                <option>Motorcycle</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Service Type</label>
+                            <select class="w-full px-4 py-2 border rounded-lg">
+                                <option>Standard Tow</option>
+                                <option>Accident Recovery</option>
+                                <option>Jump Start</option>
+                                <option>Heavy-Duty Tow</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Additional Details</label>
+                        <textarea rows="4" class="w-full px-4 py-2 border rounded-lg"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">Submit Request</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">FAQ</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Common Questions</h2>
+                <p class="mt-4 text-gray-600">Everything you need to know about our towing services</p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto space-y-6">
+                <div class="bg-white rounded-lg shadow-lg p-6" data-aos="fade-up">
+                    <h3 class="text-xl font-bold mb-3">How quickly can you arrive?</h3>
+                    <p class="text-gray-600">We aim to arrive within 30-45 minutes of your call, depending on your location.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6" data-aos="fade-up">
+                    <h3 class="text-xl font-bold mb-3">Do you tow motorcycles?</h3>
+                    <p class="text-gray-600">Yes, we provide towing services for motorcycles as well as cars and trucks.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6" data-aos="fade-up">
+                    <h3 class="text-xl font-bold mb-3">What areas do you cover?</h3>
+                    <p class="text-gray-600">We cover the entire metro area and surrounding regions. Contact us for specific locations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Penguin General Construction</h3>
+                    <p class="text-gray-400 mb-4">Your trusted partner in construction and maintenance excellence since 1995.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Our Services</a></li>
+                        <li><a href="#consultation" class="text-gray-400 hover:text-white transition-colors">Book Now</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Projects</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Commercial Construction</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Residential Construction</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Maintenance Services</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Renovation</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-map-marker-alt w-5"></i>
+                            <span>123 Construction Ave, Manila</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-phone w-5"></i>
+                            <span>+63 123 456 7890</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-envelope w-5"></i>
+                            <span>info@penguinconstruction.com</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-clock w-5"></i>
+                            <span>Mon - Fri: 8:00 AM - 5:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 Penguin Construction. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Form handling
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your request. We will contact you shortly!');
+            this.reset();
+        });
+
+        // Perfect Sidebar Functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            
+            // Toggle icon
+            const icon = sidebarToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Close sidebar on mobile when clicking a link
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Close sidebar when pressing Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        });
+    </script>
+</body>
+</html>

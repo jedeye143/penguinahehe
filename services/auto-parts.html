@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Parts | Penguin Sales & Services Company</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <style>
+        .service-hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
+                        url('https://images.unsplash.com/photo-1494976388901-750834ad4e24?q=80&w=2070') center/cover no-repeat fixed;
+            height: 70vh;
+            min-height: 500px;
+        }
+        
+        .parts-gallery-item {
+            transition: all 0.3s ease;
+        }
+        
+        .parts-gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .package-card {
+            transition: all 0.3s ease;
+        }
+
+        .package-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.1);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            color: #2563eb;
+            margin-bottom: 1rem;
+        }
+
+        /* Updated Sidebar Styling */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -280px;
+            background: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-menu {
+            padding: 4rem 1.5rem 1.5rem;
+        }
+
+        .menu-title {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            color: #1f2937;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-link i {
+            width: 24px;
+            font-size: 1.25rem;
+            margin-right: 1rem;
+            color: #6b7280;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .sidebar-link span {
+            font-weight: 500;
+            font-size: 0.9375rem;
+        }
+
+        .sidebar-link:hover {
+            background: #f3f4f6;
+            color: #1e40af;
+        }
+
+        .sidebar-link:hover i {
+            color: #1e40af;
+        }
+
+        .sidebar-link.active {
+            background: #1e40af;
+            color: white;
+        }
+
+        .sidebar-link.active i {
+            color: white;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: auto;
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem; /* Changed from left to right */
+            width: 45px;
+            height: 45px;
+            background: white;
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: #f3f4f6;
+        }
+
+        .sidebar-toggle i {
+            font-size: 1.25rem;
+            color: #1e40af;
+        }
+
+        .sidebar.active + .sidebar-toggle {
+            right: 290px; /* Position toggle button when sidebar is open */
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                max-width: 280px;
+            }
+            .sidebar.active + .sidebar-toggle {
+                right: 1.5rem; /* Keep toggle button in same position on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Toggle -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Perfect Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-menu">
+            <h3 class="menu-title">Our Services</h3>
+            <nav>
+                <a href="bridal-cars.html" class="sidebar-link">
+                    <i class="fas fa-car-side"></i>
+                    <span>Bridal Cars</span>
+                </a>
+                <a href="towing.html" class="sidebar-link">
+                    <i class="fas fa-truck-pickup"></i>
+                    <span>24/7 Towing</span>
+                </a>
+                <a href="trucking.html" class="sidebar-link">
+                    <i class="fas fa-truck"></i>
+                    <span>Trucking</span>
+                </a>
+                <a href="heavy-equipment.html" class="sidebar-link">
+                    <i class="fas fa-truck-monster"></i>
+                    <span>Heavy Equipment</span>
+                </a>
+                <a href="construction.html" class="sidebar-link">
+                    <i class="fas fa-hard-hat"></i>
+                    <span>Construction</span>
+                </a>
+                <a href="furniture.html" class="sidebar-link">
+                    <i class="fas fa-couch"></i>
+                    <span>Furniture</span>
+                </a>
+                <a href="auto-parts.html" class="sidebar-link active">
+                    <i class="fas fa-cogs"></i>
+                    <span>Auto Parts</span>
+                </a>
+            </nav>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="../index.html" class="sidebar-link">
+                <i class="fas fa-home"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="service-hero flex items-center">
+        <div class="container mx-auto px-4 text-center text-white">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6" data-aos="fade-down">Premium Auto Parts</h1>
+            <p class="text-xl md:text-2xl mb-8" data-aos="fade-up">High-quality auto parts for all your vehicle needs</p>
+            <div class="space-x-4" data-aos="fade-up" data-aos-delay="200">
+                <a href="#shop" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300">Shop Now</a>
+                <a href="#products" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 text-white font-bold py-3 px-8 rounded-full transition duration-300">Our Products</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">WHY CHOOSE US</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Your Trusted Auto Parts Supplier</h2>
+                <p class="mt-4 text-gray-600">We provide top-quality parts for all vehicle makes and models</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-6" data-aos="fade-up">
+                    <i class="fas fa-check-circle feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Genuine Parts</h3>
+                    <p class="text-gray-600">We offer only genuine and high-quality auto parts</p>
+                </div>
+                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-tools feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Wide Selection</h3>
+                    <p class="text-gray-600">From engines to brakes, we have it all</p>
+                </div>
+                <div class="text-center p-6" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-truck feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Fast Delivery</h3>
+                    <p class="text-gray-600">Get your parts delivered quickly and reliably</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">OUR PRODUCTS</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Explore Our Auto Parts</h2>
+                <p class="mt-4 text-gray-600">Find the perfect parts for your vehicle</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Product 1 -->
+                <div class="parts-gallery-item rounded-lg overflow-hidden shadow-lg" data-aos="fade-up">
+                    <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800" alt="Brake Pads" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Brake Pads</h3>
+                        <p class="text-gray-600 mb-4">High-performance brake pads for all vehicles</p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Durable and reliable</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Easy to install</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Affordable pricing</li>
+                        </ul>
+                        <a href="#shop" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center justify-center">
+                            Shop Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="parts-gallery-item rounded-lg overflow-hidden shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1597938430467-e6f23b8a5a5c?w=800" alt="Engine Oil" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Engine Oil</h3>
+                        <p class="text-gray-600 mb-4">Premium engine oil for optimal performance</p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Enhances engine life</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Improves fuel efficiency</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Available in multiple grades</li>
+                        </ul>
+                        <a href="#shop" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center justify-center">
+                            Shop Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="parts-gallery-item rounded-lg overflow-hidden shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800" alt="Car Batteries" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">Car Batteries</h3>
+                        <p class="text-gray-600 mb-4">Reliable batteries for all weather conditions</p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Long-lasting performance</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Easy installation</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Warranty included</li>
+                        </ul>
+                        <a href="#shop" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center justify-center">
+                            Shop Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section class="py-16 bg-blue-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">AUTO PARTS PACKAGES</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Value-Added Parts Packages</h2>
+                <p class="mt-4 text-gray-600">Choose the perfect package for your vehicle maintenance needs</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Basic Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up">
+                    <div class="bg-blue-600 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Basic Maintenance</h3>
+                        <p class="text-lg mt-1">Essential parts package</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱4,999</span>
+                            <p class="text-gray-600">Basic maintenance kit</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Oil filter</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Air filter</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Spark plugs</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Basic installation guide</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 30-day warranty</li>
+                        </ul>
+                        <a href="#shop" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300 inline-flex items-center justify-center">
+                            Shop Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+    
+                <!-- Premium Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up" data-aos-delay="100">
+                    <div class="bg-blue-800 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Premium Service</h3>
+                        <p class="text-lg mt-1">Complete maintenance kit</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱9,999</span>
+                            <p class="text-gray-600">Premium service kit</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> All Basic Package items</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Brake pads</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Fuel filter</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Professional installation</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 90-day warranty</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Free inspection</li>
+                        </ul>
+                        <a href="#shop" class="w-full bg-blue-800 text-white px-6 py-3 rounded-full hover:bg-blue-900 transition duration-300 inline-flex items-center justify-center">
+                            Shop Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+    
+                <!-- Professional Package -->
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full" data-aos="fade-up" data-aos-delay="200">
+                    <div class="bg-gray-800 text-white p-4 text-center">
+                        <h3 class="text-2xl font-bold">Professional Service</h3>
+                        <p class="text-lg mt-1">Complete vehicle care</p>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="text-center mb-4">
+                            <span class="text-3xl font-bold">₱15,999</span>
+                            <p class="text-gray-600">Professional service kit</p>
+                        </div>
+                        <ul class="space-y-3 mb-6 flex-grow">
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> All Premium Package items</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Timing belt kit</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Water pump</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Priority installation</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 1-year warranty</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> Quarterly inspections</li>
+                            <li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1"></i> 24/7 support hotline</li>
+                        </ul>
+                        <a href="#shop" class="w-full bg-gray-800 text-white px-6 py-3 rounded-full hover:bg-gray-900 transition duration-300 inline-flex items-center justify-center">
+                            Shop Now
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="text-center mt-12" data-aos="fade-up">
+                <p class="text-gray-600 mb-6">Need a custom parts package? Contact us for a personalized solution.</p>
+                <a href="#quote" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 inline-flex items-center">
+                    Request Custom Package
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-16 bg-blue-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">OUR SERVICES</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">Comprehensive Auto Parts Solutions</h2>
+                <p class="mt-4 text-gray-600">We offer a wide range of services to meet your needs</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up">
+                    <i class="fas fa-cogs feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Parts Installation</h3>
+                    <p class="text-gray-600">Professional installation services for all auto parts</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-tools feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Custom Solutions</h3>
+                    <p class="text-gray-600">Tailored auto parts for unique vehicle needs</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-headset feature-icon"></i>
+                    <h3 class="text-xl font-bold mb-3">Expert Support</h3>
+                    <p class="text-gray-600">24/7 customer support for all your queries</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">TESTIMONIALS</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">What Our Customers Say</h2>
+                <p class="mt-4 text-gray-600">Read about experiences from our satisfied customers</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Customer" class="w-12 h-12 rounded-full">
+                        <div class="ml-4">
+                            <h4 class="font-bold">John Smith</h4>
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Great quality parts and excellent customer service. Will definitely buy from them again!"</p>
+                </div>
+                
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Customer" class="w-12 h-12 rounded-full">
+                        <div class="ml-4">
+                            <h4 class="font-bold">Sarah Johnson</h4>
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Fast delivery and the parts were exactly what I needed. Very satisfied with my purchase."</p>
+                </div>
+                
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/2.jpg" alt="Customer" class="w-12 h-12 rounded-full">
+                        <div class="ml-4">
+                            <h4 class="font-bold">Mike Anderson</h4>
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"Their expert support team helped me find the right parts for my vehicle. Highly recommended!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Penguin Auto Parts</h3>
+                    <p class="text-gray-400 mb-4">Your trusted supplier of quality auto parts and accessories since 1995.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Our Services</a></li>
+                        <li><a href="#consultation" class="text-gray-400 hover:text-white transition-colors">Book Now</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Projects</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Our Products</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Engine Parts</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Brake Systems</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Suspension Parts</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Accessories</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-map-marker-alt w-5"></i>
+                            <span>123 Auto Parts Ave, Manila</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-phone w-5"></i>
+                            <span>+63 123 456 7890</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-envelope w-5"></i>
+                            <span>info@penguinautoparts.com</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-clock w-5"></i>
+                            <span>Mon - Fri: 8:00 AM - 5:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 Penguin Auto Parts. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg max-w-md w-full mx-4 overflow-hidden">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900">Checkout</h3>
+                    <button class="text-gray-400 hover:text-gray-500" onclick="closeCheckoutModal()">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <form id="checkoutForm" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Full Name</label>
+                        <input type="text" id="name" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
+                        <input type="email" id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="address">Delivery Address</label>
+                        <textarea id="address" name="address" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="package">Selected Package</label>
+                        <input type="text" id="package" name="package" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" readonly>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+                        Place Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            mirror: false
+        });
+
+        // Perfect Sidebar Functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+            
+            // Toggle icon
+            const icon = sidebarToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Close sidebar on mobile when clicking a link
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Close sidebar when pressing Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        });
+
+        // Checkout Modal Functionality
+        const checkoutModal = document.getElementById('checkoutModal');
+        const packageInput = document.getElementById('package');
+        const checkoutForm = document.getElementById('checkoutForm');
+
+        function openCheckoutModal(packageName) {
+            checkoutModal.classList.remove('hidden');
+            checkoutModal.classList.add('flex');
+            packageInput.value = packageName;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCheckoutModal() {
+            checkoutModal.classList.add('hidden');
+            checkoutModal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        checkoutModal.addEventListener('click', (e) => {
+            if (e.target === checkoutModal) {
+                closeCheckoutModal();
+            }
+        });
+
+        // Handle form submission
+        checkoutForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Here you would typically handle the form submission
+            alert('Order placed successfully! We will contact you soon.');
+            closeCheckoutModal();
+            checkoutForm.reset();
+        });
+
+        // Update all shop now buttons to open modal
+        document.querySelectorAll('a[href="#shop"]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const packageName = e.target.closest('.package-card, .parts-gallery-item')
+                    .querySelector('h3').textContent;
+                openCheckoutModal(packageName);
+            });
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !checkoutModal.classList.contains('hidden')) {
+                closeCheckoutModal();
+            }
+        });
+    </script>
+</body>
+</html>

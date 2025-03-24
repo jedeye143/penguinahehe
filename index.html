@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Professional Bridal Car, Towing, Trucking, and Heavy Equipment Rental Services">
+    <title>Penguin Sales & Services Company | Professional Services</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    
+    <style>
+        /* Enhanced custom styles */
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
+                        url('images/hero-bg.jpg') center/cover no-repeat fixed;
+            height: 90vh;
+            min-height: 600px;
+        }
+        
+        .service-card {
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            background: linear-gradient(145deg, #ffffff, #f3f4f6);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .service-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            transition: all 0.4s ease;
+            z-index: -1;
+            border-radius: 0.5rem;
+        }
+        
+        .service-card:hover::after {
+            opacity: 0.1;
+        }
+
+        .service-image-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-image-wrapper img {
+            transition: transform 0.6s ease;
+        }
+
+        .service-card:hover .service-image-wrapper img {
+            transform: scale(1.1);
+        }
+
+        .service-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            padding: 2rem 1rem;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover .service-overlay {
+            transform: translateY(0);
+        }
+
+        /* Animated button styles */
+        .animated-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .animated-button::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(255,255,255,0.2);
+            transition: width 0.3s ease;
+        }
+
+        .animated-button:hover::after {
+            width: 100%;
+        }
+        
+        /* Loading animation */
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .rental-loader {
+            position: relative;
+            width: 300px;
+            text-align: center;
+        }
+        
+        .rental-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .rental-icon {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: iconFadeIn 0.5s ease forwards;
+        }
+        
+        .rental-icon i {
+            font-size: 2.5rem;
+            color: #3b82f6;
+            filter: drop-shadow(0 4px 6px rgba(59, 130, 246, 0.2));
+        }
+        
+        .rental-icon:nth-child(1) { animation-delay: 0s; }
+        .rental-icon:nth-child(2) { animation-delay: 0.2s; }
+        .rental-icon:nth-child(3) { animation-delay: 0.4s; }
+        .rental-icon:nth-child(4) { animation-delay: 0.6s; }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            animation: progress 2s ease-in-out infinite;
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-text {
+            margin-top: 10px;
+            font-size: 0.875rem;
+            color: #94a3b8;
+            opacity: 0.8;
+        }
+        
+        @keyframes iconFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes progress {
+            0% {
+                width: 0;
+                left: 0;
+            }
+            50% {
+                width: 100%;
+                left: 0;
+            }
+            100% {
+                width: 0;
+                left: 100%;
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        /* Updated Search Styles */
+        .search-wrapper {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .search-container {
+            position: relative;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
+                        0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .search-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 60px;
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .search-input:focus {
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            color: #6b7280;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 20px;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: none;
+            background: #f3f4f6;
+        }
+
+        .search-clear:hover {
+            background: #e5e7eb;
+            color: #4b5563;
+        }
+
+        .search-input:focus + .search-icon {
+            color: #3b82f6;
+        }
+
+        .search-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 0 5px;
+        }
+
+        .search-tag {
+            padding: 8px 16px;
+            background: #f3f4f6;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .search-tag:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 101;
+            margin-top: 10px;
+        }
+
+        .search-suggestions.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f3f4f6;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background: #f8fafc;
+        }
+
+        .suggestion-icon {
+            width: 45px;
+            height: 45px;
+            background: #3b82f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .suggestion-content {
+            flex: 1;
+        }
+
+        .suggestion-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+            font-size: 1.1rem;
+        }
+
+        .suggestion-description {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        /* Add highlight animation for selected service */
+        @keyframes highlight {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .service-card.highlight {
+            animation: highlight 0.6s ease;
+            box-shadow: 0 0 0 3px #3b82f6;
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- Loading Animation -->
+    <div class="loader-wrapper" id="loader">
+        <div class="rental-loader">
+            <div class="rental-icons">
+                <div class="rental-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="rental-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="rental-icon">
+                    <i class="fas fa-truck-pickup"></i>
+                </div>
+                <div class="rental-icon">
+                    <i class="fas fa-tractor"></i>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <div class="loading-text">Preparing Your Experience</div>
+            <div class="status-text" id="statusText">Loading services...</div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-3">
+                    <img src="pengss.png" alt="Company Logo" class="h-10">
+                    <span class="text-xl font-bold text-blue-900">Penguin Sales & Services Company</span>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-800 hover:text-blue-600 font-medium">Home</a>
+                    <a href="#services" class="text-gray-800 hover:text-blue-600 font-medium">Services</a>
+                    <a href="#about" class="text-gray-800 hover:text-blue-600 font-medium">About Us</a>
+                    <a href="#contact" class="text-gray-800 hover:text-blue-600 font-medium">Contact Us</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-500 hover:text-gray-800 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <div id="mobile-menu" class="md:hidden hidden pb-4">
+                <a href="#" class="block py-2 px-4 text-gray-800 hover:bg-gray-100">Home</a>
+                <a href="#services" class="block py-2 px-4 text-gray-800 hover:bg-gray-100">Services</a>
+                <a href="#about" class="block py-2 px-4 text-gray-800 hover:bg-gray-100">About Us</a>
+                <a href="#contact" class="block py-2 px-4 text-gray-800 hover:bg-gray-100">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section flex items-center justify-center text-center text-white">
+        <div class="container mx-auto px-4" data-aos="fade-up">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Professional Services for Every Need</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">From bridal cars to heavy equipment rentals, we provide reliable and efficient solutions tailored to your requirements.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#services" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 text-lg">Our Services</a>
+                <a href="#contact" class="bg-transparent hover:bg-white hover:text-blue-900 text-white font-bold py-3 px-8 rounded-full border-2 border-white transition duration-300 text-lg">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gradient-to-b from-white to-gray-50">
+        <div class="container mx-auto px-4">
+            <!-- Updated Search Section -->
+            <div class="mb-16">
+                <div class="search-wrapper">
+                    <div class="search-container">
+                        <div class="search-header text-center mb-6">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Find Your Service</h3>
+                            <p class="text-gray-600">Discover the perfect solution for your needs</p>
+                        </div>
+                        <div class="search-input-group">
+                            <input type="text" 
+                                   class="search-input"
+                                   id="searchInput"
+                                   placeholder="What service are you looking for?"
+                                   autocomplete="off">
+                            <i class="fas fa-search search-icon"></i>
+                            <i class="fas fa-times search-clear" id="searchClear"></i>
+                        </div>
+                        <div class="search-tags">
+                            <span class="search-tag" data-search="bridal">Bridal Cars</span>
+                            <span class="search-tag" data-search="towing">Towing</span>
+                            <span class="search-tag" data-search="trucking">Trucking</span>
+                            <span class="search-tag" data-search="equipment">Heavy Equipment</span>
+                        </div>
+                        <div class="search-suggestions" id="searchSuggestions"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mb-16" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold tracking-wider uppercase">Our Services</span>
+                <h2 class="text-4xl md:text-5xl font-bold mt-3 text-gray-800">Professional Solutions</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto mt-4 rounded-full"></div>
+                <p class="mt-6 text-gray-600 text-lg max-w-3xl mx-auto">Comprehensive professional services tailored to meet your specific needs</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Bridal Car Services -->
+                <div class="service-card relative rounded-xl overflow-hidden shadow-lg flex flex-col h-full" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-image-wrapper">
+                        <img src="https://plus.unsplash.com/premium_photo-1673399639753-83bedce46563?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Bridal Car Services" class="w-full h-64 object-cover">
+                        <div class="service-overlay text-white">
+                            <p class="text-sm">Luxury vehicles for your special day</p>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="mb-4">
+                            <i class="fas fa-car text-blue-600 text-3xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">Bridal Car Services</h3>
+                            <p class="text-gray-600">Make your wedding day unforgettable with our premium bridal car collection.</p>
+                        </div>
+                        <ul class="mb-6 text-gray-600 flex-grow">
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Luxury vehicles</li>
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Professional chauffeur</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Elegant decoration</li>
+                        </ul>
+                        <a href="/services/bridal-cars.html" class="animated-button inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all w-full">
+                            Learn More
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Towing Services 24/7 -->
+                <div class="service-card relative rounded-xl overflow-hidden shadow-lg flex flex-col h-full" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-image-wrapper">
+                        <img src="https://img.freepik.com/premium-photo/tow-truck-public-road-tow-truck-with-broken-car-country-road-tow-truck-transporting-car-highway-car-service-transportation-concept_782515-9647.jpg?w=900" alt="Towing Services" class="w-full h-64 object-cover">
+                        <div class="service-overlay text-white">
+                            <p class="text-sm">24/7 Emergency towing assistance</p>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="mb-4">
+                            <i class="fas fa-truck-pickup text-blue-600 text-3xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">Towing Services 24/7</h3>
+                            <p class="text-gray-600">Round-the-clock emergency towing services for all vehicle types.</p>
+                        </div>
+                        <ul class="mb-6 text-gray-600 flex-grow">
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>24/7 availability</li>
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Quick response time</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>All vehicle types</li>
+                        </ul>
+                        <a href="/services/towing.html" class="animated-button inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all w-full">
+                            Learn More
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Trucking Services -->
+                <div class="service-card relative rounded-xl overflow-hidden shadow-lg flex flex-col h-full" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-image-wrapper">
+                        <img src="https://img.freepik.com/free-photo/side-view-man-talking-phone_23-2149426478.jpg?t=st=1742791746~exp=1742795346~hmac=8c6670670d71911a233dcf90f6d40fcccf1ce77202fc38f73ec72ab035adc09a&w=996" alt="Trucking Services" class="w-full h-64 object-cover">
+                        <div class="service-overlay text-white">
+                            <p class="text-sm">Reliable cargo transportation</p>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="mb-4">
+                            <i class="fas fa-truck text-blue-600 text-3xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">Trucking Services</h3>
+                            <p class="text-gray-600">Professional cargo transportation solutions for your business.</p>
+                        </div>
+                        <ul class="mb-6 text-gray-600 flex-grow">
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Nationwide delivery</li>
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Various truck sizes</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Cargo tracking</li>
+                        </ul>
+                        <a href="/services/trucking.html" class="animated-button inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all w-full">
+                            Learn More
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Heavy Equipment Rental -->
+                <div class="service-card relative rounded-xl overflow-hidden shadow-lg flex flex-col h-full" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=2070&auto=format&fit=crop" alt="Heavy Equipment Rental" class="w-full h-64 object-cover">
+                        <div class="service-overlay text-white">
+                            <p class="text-sm">Quality equipment for your projects</p>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="mb-4">
+                            <i class="fas fa-tractor text-blue-600 text-3xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">Heavy Equipment Rental</h3>
+                            <p class="text-gray-600">Wide range of construction and industrial equipment for rent.</p>
+                        </div>
+                        <ul class="mb-6 text-gray-600 flex-grow">
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Modern equipment</li>
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Flexible rental terms</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Operator available</li>
+                        </ul>
+                        <a href="/services/heavy-equipment.html" class="animated-button inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all w-full">
+                            Learn More
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- General Construction & Maintenance -->
+                <div class="service-card relative rounded-xl overflow-hidden shadow-lg flex flex-col h-full" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop" alt="Construction Services" class="w-full h-64 object-cover">
+                        <div class="service-overlay text-white">
+                            <p class="text-sm">Professional construction solutions</p>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="mb-4">
+                            <i class="fas fa-hard-hat text-blue-600 text-3xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">Construction & Maintenance</h3>
+                            <p class="text-gray-600">Complete construction and maintenance services for all projects.</p>
+                        </div>
+                        <ul class="mb-6 text-gray-600 flex-grow">
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Expert team</li>
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Quality materials</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Timely completion</li>
+                        </ul>
+                        <a href="/services/construction.html" class="animated-button inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all w-full">
+                            Learn More
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Furniture Hotel & Residential -->
+                <div class="service-card relative rounded-xl overflow-hidden shadow-lg flex flex-col h-full" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?q=80&w=2070&auto=format&fit=crop" alt="Furniture Services" class="w-full h-64 object-cover">
+                        <div class="service-overlay text-white">
+                            <p class="text-sm">Premium furniture solutions</p>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="mb-4">
+                            <i class="fas fa-couch text-blue-600 text-3xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">Furniture Solutions</h3>
+                            <p class="text-gray-600">High-quality furniture for hotels and residential spaces.</p>
+                        </div>
+                        <ul class="mb-6 text-gray-600 flex-grow">
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Custom designs</li>
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Premium quality</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Installation service</li>
+                        </ul>
+                        <a href="/services/furniture.html" class="animated-button inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all w-full">
+                            Learn More
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Auto Parts -->
+                <div class="service-card relative rounded-xl overflow-hidden shadow-lg flex flex-col h-full" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=2070&auto=format&fit=crop" alt="Auto Parts" class="w-full h-64 object-cover">
+                        <div class="service-overlay text-white">
+                            <p class="text-sm">Genuine auto parts supplier</p>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="mb-4">
+                            <i class="fas fa-cogs text-blue-600 text-3xl mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">Auto Parts</h3>
+                            <p class="text-gray-600">Genuine auto parts for all vehicle makes and models.</p>
+                        </div>
+                        <ul class="mb-6 text-gray-600 flex-grow">
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Genuine parts</li>
+                            <li class="flex items-center mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Wide selection</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Expert advice</li>
+                        </ul>
+                        <a href="/services/auto-parts.html" class="animated-button inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all w-full">
+                            Learn More
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right">
+                    <img src="https://plus.unsplash.com/premium_photo-1661290470322-a313098e7c2a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="About Us" class="rounded-lg shadow-xl w-full">
+                </div>
+                
+                <div data-aos="fade-left">
+                    <span class="text-blue-600 font-semibold">ABOUT US</span>
+                    <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-6 text-gray-800">Your Trusted Service Provider</h2>
+                    
+                    <p class="text-gray-600 mb-4">
+                        We are a leading provider of professional services, including bridal car rentals, towing, trucking, heavy equipment rentals, and more. With years of experience, we are committed to delivering exceptional service and reliability.
+                    </p>
+                    
+                    <p class="text-gray-600 mb-6">
+                        Our mission is to provide tailored solutions that meet the unique needs of our clients, ensuring satisfaction and trust in every project we undertake.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-blue-600 mr-3 text-xl"></i>
+                            <span class="text-gray-700">Experienced Team</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-blue-600 mr-3 text-xl"></i>
+                            <span class="text-gray-700">24/7 Support</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-blue-600 mr-3 text-xl"></i>
+                            <span class="text-gray-700">Affordable Pricing</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-blue-600 mr-3 text-xl"></i>
+                            <span class="text-gray-700">Customer-Centric</span>
+                        </div>
+                    </div>
+                    
+                    <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 inline-block">Get In Touch</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">TESTIMONIALS</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2 text-gray-800">What Our Clients Say</h2>
+                <p class="mt-4 text-gray-600 max-w-3xl mx-auto">Hear from our satisfied clients who have experienced our exceptional services.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Client" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-1">John Darwin</h4>
+                            <p class="text-gray-600 text-sm">Happy Customer</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic">"The bridal car service made our wedding day truly special. Highly recommended!"</p>
+                    <div class="mt-4 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Client" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-1">Allen Osorio</h4>
+                            <p class="text-gray-600 text-sm">Business Owner</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic">"Their towing service was prompt and professional. Saved me during a late-night breakdown!"</p>
+                    <div class="mt-4 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-gray-50 p-8 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="300">
+                    <div class="flex items-center mb-4">
+                        <img src="https://images.pexels.com/photos/1759531/pexels-photo-1759531.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Client" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 mb-1">Mike Emilia</h4>
+                            <p class="text-gray-600 text-sm">Construction Manager</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic">"Quality heavy equipment rentals and excellent maintenance service. Very reliable partner!"</p>
+                    <div class="mt-4 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-blue-600 font-semibold">GET IN TOUCH</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2 text-gray-800">Contact Us</h2>
+                <p class="mt-4 text-gray-600 max-w-3xl mx-auto">Have questions or need our services? Reach out to us, and we'll get back to you promptly.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="bg-white p-8 rounded-lg shadow-lg" data-aos="fade-right">
+                    <form id="contactForm" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-gray-700 mb-2">Your Name</label>
+                            <input type="text" id="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-700 mb-2">Email Address</label>
+                            <input type="email" id="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="service" class="block text-gray-700 mb-2">Service Interested In</label>
+                            <select id="service" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select a service</option>
+                                <option value="bridal">Bridal Car Services</option>
+                                <option value="towing">Towing Services</option>
+                                <option value="trucking">Trucking Services</option>
+                                <option value="heavy-equipment">Heavy Equipment Services</option>
+                                <option value="construction">Construction & Maintenance</option>
+                                <option value="furniture">Furniture</option>
+                                <option value="parts">Auto Parts</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-gray-700 mb-2">Your Message</label>
+                            <textarea id="message" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md transition duration-300">Send Message</button>
+                    </form>
+                </div>
+                
+                <!-- Contact Information -->
+                <div data-aos="fade-left">
+                    <div class="space-y-8">
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-map-marker-alt text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-1">Our Location</h4>
+                                <p class="text-gray-600">123 Business Street, City, Country</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-phone text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-1">Phone Numbers</h4>
+                                <p class="text-gray-600">+1 234 567 8900</p>
+                                <p class="text-gray-600">+1 234 567 8901</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-envelope text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-1">Email Address</h4>
+                                <p class="text-gray-600">info@yourcompany.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-clock text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-1">Working Hours</h4>
+                                <p class="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
+                                <p class="text-gray-600">Saturday: 9:00 AM - 1:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h4 class="text-xl font-bold mb-4">About Us</h4>
+                    <p class="text-gray-400">Your trusted partner for professional services, delivering excellence since establishment.</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white">Services</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Bridal Cars</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Towing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Heavy Equipment</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Auto Parts</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2024 Your Company Name. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
